@@ -9,8 +9,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Samplewithfirebase">
         <activity
-            android:name=".thirdscreen"
+            android:name=".photoScreen"
             android:exported="false" />
+        <activity
+            android:name=".thirdscreen"
+            android:exported="false"
+            android:parentActivityName=".DisplayMessageActivity" />
         <activity
             android:name=".DisplayMessageActivity"
             android:parentActivityName=".MainActivity" />
