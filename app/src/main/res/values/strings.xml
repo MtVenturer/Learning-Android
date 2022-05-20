@@ -5,6 +5,7 @@
     <string name="button_fetch">Fetch</string>
     <string name="sample_quote">Sample Quote</string>
     <string name="title_activity_thirdscreen">thirdscreen</string>
+    <string name="button_submit">Submit</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
