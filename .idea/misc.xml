@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/rober/AndroidStudioProjects/samplewithfirebase/app/src/main/res/layout/activity_camera.xml" value="0.18203125" />
         <entry key="..\:/Users/rober/AndroidStudioProjects/samplewithfirebase/app/src/main/res/layout/activity_display_message.xml" value="0.25" />
         <entry key="..\:/Users/rober/AndroidStudioProjects/samplewithfirebase/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/rober/AndroidStudioProjects/samplewithfirebase/app/src/main/res/layout/activity_photo_screen.xml" value="0.22" />
         <entry key="..\:/Users/rober/AndroidStudioProjects/samplewithfirebase/app/src/main/res/layout/activity_thirdscreen.xml" value="0.33" />
       </map>
     </option>

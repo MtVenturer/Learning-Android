@@ -64,4 +64,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void uploadScreen(View view){
+        Intent intent = new Intent(this, photoScreen.class);
+        startActivity(intent);
+    }
 }
