@@ -18,7 +18,7 @@ public class photoScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_photo_screen);
 
         Button enableCamera = findViewById(R.id.enableCamera);
         enableCamera.setOnClickListener(new View.OnClickListener() {
