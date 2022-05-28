@@ -1,6 +1,7 @@
 package com.example.samplewithfirebase;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.ImageCapture;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -31,6 +32,12 @@ public class photoScreen extends AppCompatActivity {
                 }
             }
         });
+        Button takePhoto = findViewById(R.id.takePhoto);
+        takePhoto.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                takePhoto();
+            }
+        });
     }
 
     private boolean hasCameraPermission() {
@@ -52,5 +59,8 @@ public class photoScreen extends AppCompatActivity {
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
     }
-
+    private void takePhoto() {
+        Intent intent = new Intent(this, takePhoto.class);
+        startActivity(intent);
+    }
 }

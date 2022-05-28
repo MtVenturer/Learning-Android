@@ -10,10 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/container">
+
         <androidx.camera.view.PreviewView
             android:id="@+id/previewView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_height="217dp"
+                android:text="Button" />
+        </androidx.camera.view.PreviewView>
     </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
