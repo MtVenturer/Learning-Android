@@ -69,4 +69,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, photoScreen.class);
         startActivity(intent);
     }
+
+    public void storeScreen(View view){
+        Intent intent = new Intent(this,StoreImage.class);
+        startActivity(intent);
+    }
+
 }
