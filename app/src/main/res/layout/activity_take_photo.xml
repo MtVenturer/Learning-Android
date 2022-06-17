@@ -7,10 +7,41 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".takePhoto">
 
-<androidx.camera.view.PreviewView
-    android:id="@+id/viewFinder"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    <androidx.camera.view.PreviewView
+        android:id="@+id/viewFinder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="gone">
+
+
+    </androidx.camera.view.PreviewView>
+
+    <SeekBar
+        android:id="@+id/zoom_slider"
+        android:layout_width="96dp"
+        android:layout_height="34dp"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="16dp"
+        android:max="10"
+        android:scaleX="2"
+        android:scaleY="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.16"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/zoom_level"
+        android:layout_width="201dp"
+        android:layout_height="45dp"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/zoom_slider"
+        app:layout_constraintVertical_bias="0.025" />
 
     <Button
         android:id="@+id/image_capture_button"
