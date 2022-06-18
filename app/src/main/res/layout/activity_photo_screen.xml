@@ -11,19 +11,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="384dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="This is a CameraX test app!"
-            android:textSize="20sp"></TextView>
-
         <Button
             android:id="@+id/takePhoto"
             android:layout_width="match_parent"
-            android:layout_height="83dp"
+            android:layout_height="291dp"
             android:onClick="takePhoto"
             android:text="Take Photo"
             app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +23,7 @@
         <Button
             android:id="@+id/enableCamera"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="288dp"
             android:gravity="center"
             android:onClick="openCam"
             android:text="Open Camera Preview" />

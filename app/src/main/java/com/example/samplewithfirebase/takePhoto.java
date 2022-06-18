@@ -47,7 +47,9 @@ public class takePhoto extends AppCompatActivity {
     private ImageCapture imageCapture;
     private VideoCapture videoCapture;
     SeekBar zoom_slider;
+    SeekBar exposure_slider;
     TextView zoom_level;
+    TextView exposure_level;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,8 @@ public class takePhoto extends AppCompatActivity {
         bRecord.setText("start recording"); // Set the initial text of the button
         zoom_slider= findViewById(R.id.zoom_slider);
         zoom_level=findViewById(R.id.zoom_level);
+        exposure_level=findViewById(R.id.exposure_level);
+        exposure_slider=findViewById(R.id.exposure_slider);
         bTakePicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
@@ -124,6 +128,24 @@ public class takePhoto extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 cameraControl.setLinearZoom((float)progress/10);
                 zoom_level.setText("Zoom: "+cameraInfo.getZoomState().getValue().getLinearZoom());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        exposure_slider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                cameraControl.setExposureCompensationIndex(progress);
+                exposure_level.setText("Exp: "+cameraInfo.getExposureState().getExposureCompensationIndex());
+
             }
 
             @Override
