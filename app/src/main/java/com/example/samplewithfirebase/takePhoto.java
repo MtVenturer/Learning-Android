@@ -40,25 +40,29 @@ import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
+
 public class takePhoto extends AppCompatActivity {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     Button bTakePicture;
-    Button bRecord;
+    //Button bRecord;
     PreviewView viewFinder;
     private ImageCapture imageCapture;
-    private VideoCapture videoCapture;
+    //private VideoCapture videoCapture;
     SeekBar zoom_slider;
     SeekBar exposure_slider;
     TextView zoom_level;
     TextView exposure_level;
+    Integer total_sec;
+    Integer int_in_sec;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_photo);
+
         viewFinder = findViewById(R.id.viewFinder);
         bTakePicture = findViewById(R.id.image_capture_button);
-        bRecord = findViewById(R.id.video_capture_button);
-        bRecord.setText("start recording"); // Set the initial text of the button
+        //bRecord = findViewById(R.id.video_capture_button);
+        //bRecord.setText("start recording"); // Set the initial text of the button
         zoom_slider= findViewById(R.id.zoom_slider);
         zoom_level=findViewById(R.id.zoom_level);
         exposure_level=findViewById(R.id.exposure_level);
@@ -72,20 +76,23 @@ public class takePhoto extends AppCompatActivity {
         Integer int_hrs=Integer.parseInt(intent.getStringExtra("int_hrs"));
         Integer int_min=Integer.parseInt(intent.getStringExtra("int_min"));
         Integer int_sec=Integer.parseInt(intent.getStringExtra("int_sec"));
-
-
+        //convert total recording time to seconds
+        total_sec = total_rec_sec+total_rec_min*60+total_rec_hrs*3600;
+        //convert total interval time to sec
+        int_in_sec = int_sec+int_min*60+int_hrs*3600;
+        setTitle(recording_name);
         bTakePicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
                 capturePhoto();
             }
         });
-        bRecord.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Code here executes on main thread after user presses button
-                recordVideo();
-            }
-        });
+//        bRecord.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                // Code here executes on main thread after user presses button
+//                recordVideo();
+//            }
+//        });
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> {
@@ -120,9 +127,9 @@ public class takePhoto extends AppCompatActivity {
                 .build();
 
         // Video capture use case
-        videoCapture = new VideoCapture.Builder()
-                .setVideoFrameRate(30)
-                .build();
+//        videoCapture = new VideoCapture.Builder()
+//                .setVideoFrameRate(30)
+//                .build();
 
         // Image analysis use case
 //        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
@@ -132,7 +139,7 @@ public class takePhoto extends AppCompatActivity {
 //        imageAnalysis.setAnalyzer(getExecutor(), (ImageAnalysis.Analyzer) this);
 
         //bind to lifecycle:
-        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageCapture, videoCapture);
+        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageCapture);
         CameraControl cameraControl = camera.getCameraControl();
         CameraInfo cameraInfo = camera.getCameraInfo();
         zoom_slider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -198,52 +205,52 @@ public class takePhoto extends AppCompatActivity {
 //    }
 
 
-    @SuppressLint("RestrictedApi")
-    private void recordVideo() {
-        if (videoCapture != null) {
-
-            long timestamp = System.currentTimeMillis();
-
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, timestamp);
-            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
-
-            try {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                videoCapture.startRecording(
-                        new VideoCapture.OutputFileOptions.Builder(
-                                getContentResolver(),
-                                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                                contentValues
-                        ).build(),
-                        getExecutor(),
-                        new VideoCapture.OnVideoSavedCallback() {
-                            @Override
-                            public void onVideoSaved(@NonNull VideoCapture.OutputFileResults outputFileResults) {
-                                Toast.makeText(takePhoto.this, "Video has been saved successfully.", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onError(int videoCaptureError, @NonNull String message, @Nullable Throwable cause) {
-                                Toast.makeText(takePhoto.this, "Error saving video: " + message, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                );
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
+//    @SuppressLint("RestrictedApi")
+//    private void recordVideo() {
+//        if (videoCapture != null) {
+//
+//            long timestamp = System.currentTimeMillis();
+//
+//            ContentValues contentValues = new ContentValues();
+//            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, timestamp);
+//            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
+//
+//            try {
+//                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+//                    // TODO: Consider calling
+//                    //    ActivityCompat#requestPermissions
+//                    // here to request the missing permissions, and then overriding
+//                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                    //                                          int[] grantResults)
+//                    // to handle the case where the user grants the permission. See the documentation
+//                    // for ActivityCompat#requestPermissions for more details.
+//                    return;
+//                }
+//                videoCapture.startRecording(
+//                        new VideoCapture.OutputFileOptions.Builder(
+//                                getContentResolver(),
+//                                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+//                                contentValues
+//                        ).build(),
+//                        getExecutor(),
+//                        new VideoCapture.OnVideoSavedCallback() {
+//                            @Override
+//                            public void onVideoSaved(@NonNull VideoCapture.OutputFileResults outputFileResults) {
+//                                Toast.makeText(takePhoto.this, "Video has been saved successfully.", Toast.LENGTH_SHORT).show();
+//                            }
+//
+//                            @Override
+//                            public void onError(int videoCaptureError, @NonNull String message, @Nullable Throwable cause) {
+//                                Toast.makeText(takePhoto.this, "Error saving video: " + message, Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                );
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
+//    }
 
     private void capturePhoto() {
         long timestamp = System.currentTimeMillis();
