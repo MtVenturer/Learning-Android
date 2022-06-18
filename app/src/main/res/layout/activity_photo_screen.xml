@@ -6,29 +6,162 @@
     android:layout_height="match_parent"
     tools:context=".photoScreen">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/recording_config_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Recording Configuration"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="34sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/recording_name_title"
+            android:layout_width="wrap_content"
+            android:layout_height="27dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="24dp"
+            android:text="Recording Name"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recording_config_title" />
+
+        <EditText
+            android:id="@+id/recording_name"
+            android:layout_width="332dp"
+            android:layout_height="61dp"
+            android:ems="10"
+            android:hint="Name"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/recording_name_title"
+            app:layout_constraintTop_toBottomOf="@+id/recording_name_title" />
 
         <Button
             android:id="@+id/takePhoto"
-            android:layout_width="match_parent"
-            android:layout_height="291dp"
+            android:layout_width="304dp"
+            android:layout_height="53dp"
+            android:layout_marginBottom="24dp"
             android:onClick="takePhoto"
-            android:text="Take Photo"
+            android:text="Start Recording"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/enableCamera"
-            android:layout_width="match_parent"
-            android:layout_height="288dp"
-            android:gravity="center"
-            android:onClick="openCam"
-            android:text="Open Camera Preview" />
+        <TextView
+            android:id="@+id/total_recording_time_title"
+            android:layout_width="210dp"
+            android:layout_height="27dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="4dp"
+            android:text="Total Recording Time"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recording_name" />
 
-    </LinearLayout>
+        <EditText
+            android:id="@+id/edit_recording_hr"
+            android:layout_width="119dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="4dp"
+            android:ems="10"
+            android:hint="Hours"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="@+id/total_recording_time_title"
+            app:layout_constraintTop_toBottomOf="@+id/total_recording_time_title" />
+
+        <EditText
+            android:id="@+id/edit_recording_mins"
+            android:layout_width="119dp"
+            android:layout_height="56dp"
+            android:ems="10"
+            android:hint="Min"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/edit_recording_hr"
+            app:layout_constraintTop_toTopOf="@+id/edit_recording_hr" />
+
+        <EditText
+            android:id="@+id/edit_recording_sec"
+            android:layout_width="119dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="20dp"
+            android:ems="10"
+            android:hint="Sec"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/edit_recording_mins"
+            app:layout_constraintTop_toTopOf="@+id/edit_recording_mins" />
+
+        <TextView
+            android:id="@+id/interval_time_title"
+            android:layout_width="211dp"
+            android:layout_height="27dp"
+            android:layout_marginStart="20dp"
+            android:text="Interval time"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_recording_hr" />
+
+        <EditText
+            android:id="@+id/edit_interval_hr"
+            android:layout_width="119dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="236dp"
+            android:ems="10"
+            android:hint="Hours"
+            android:inputType="number"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/interval_time_title"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <EditText
+            android:id="@+id/edit_interval_min"
+            android:layout_width="119dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="152dp"
+            android:ems="10"
+            android:hint="Min"
+            android:inputType="number"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/edit_interval_hr"
+            app:layout_constraintTop_toTopOf="@+id/edit_interval_hr"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <EditText
+            android:id="@+id/edit_interval_sec"
+            android:layout_width="119dp"
+            android:layout_height="56dp"
+            android:ems="10"
+            android:hint="Sec"
+            android:inputType="number"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/edit_interval_min"
+            app:layout_constraintTop_toTopOf="@+id/edit_interval_min"
+            app:layout_constraintVertical_bias="0.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

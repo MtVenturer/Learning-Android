@@ -21,17 +21,7 @@ public class photoScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_screen);
 
-        Button enableCamera = findViewById(R.id.enableCamera);
-        enableCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (hasCameraPermission()) {
-                    enableCamera();
-                } else {
-                    requestPermission();
-                }
-            }
-        });
+
         Button takePhoto = findViewById(R.id.takePhoto);
         takePhoto.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -55,10 +45,7 @@ public class photoScreen extends AppCompatActivity {
         );
     }
 
-    private void enableCamera() {
-        Intent intent = new Intent(this, CameraActivity.class);
-        startActivity(intent);
-    }
+
     private void takePhoto() {
         Intent intent = new Intent(this, takePhoto.class);
         startActivity(intent);
