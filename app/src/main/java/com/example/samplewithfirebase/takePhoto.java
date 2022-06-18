@@ -24,6 +24,7 @@ import androidx.lifecycle.LifecycleOwner;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -62,6 +63,17 @@ public class takePhoto extends AppCompatActivity {
         zoom_level=findViewById(R.id.zoom_level);
         exposure_level=findViewById(R.id.exposure_level);
         exposure_slider=findViewById(R.id.exposure_slider);
+
+        Intent intent = getIntent();
+        String recording_name=intent.getStringExtra("recording_name");
+        Integer total_rec_hrs=Integer.parseInt(intent.getStringExtra("total_rec_hrs"));
+        Integer total_rec_min=Integer.parseInt(intent.getStringExtra("total_rec_min"));
+        Integer total_rec_sec=Integer.parseInt(intent.getStringExtra("total_rec_sec"));
+        Integer int_hrs=Integer.parseInt(intent.getStringExtra("int_hrs"));
+        Integer int_min=Integer.parseInt(intent.getStringExtra("int_min"));
+        Integer int_sec=Integer.parseInt(intent.getStringExtra("int_sec"));
+
+
         bTakePicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
