@@ -29,19 +29,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/zoom_level"
-        android:layout_width="201dp"
-        android:layout_height="45dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/zoom_slider"
-        app:layout_constraintVertical_bias="0.025" />
-
     <!--    <Button-->
 <!--        android:id="@+id/video_capture_button"-->
 <!--        android:layout_width="110dp"-->
@@ -54,16 +41,28 @@
 <!--        app:layout_constraintBottom_toBottomOf="parent"-->
 <!--        app:layout_constraintStart_toEndOf="@id/vertical_centerline" />-->
 
+    <TextView
+        android:id="@+id/zoom_level"
+        android:layout_width="201dp"
+        android:layout_height="45dp"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/zoom_slider"
+        app:layout_constraintVertical_bias="0.844" />
+
     <Button
         android:id="@+id/image_capture_button"
-        android:layout_width="206dp"
-        android:layout_height="100dp"
+        android:layout_width="307dp"
+        android:layout_height="99dp"
         android:elevation="2dp"
         android:onClick="capturePhoto"
         android:text="@string/start_capture"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/vertical_centerline"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/end_capture_btn"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -72,7 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent=".50" />
+        app:layout_constraintGuide_percent="0.5" />
 
     <SeekBar
         android:id="@+id/exposure_slider"
@@ -97,15 +96,15 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.888"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/zoom_level"
         app:layout_constraintTop_toBottomOf="@+id/zoom_slider"
-        app:layout_constraintVertical_bias="0.025" />
+        app:layout_constraintVertical_bias="0.844" />
 
     <Button
         android:id="@+id/end_capture_btn"
-        android:layout_width="206dp"
-        android:layout_height="100dp"
+        android:layout_width="103dp"
+        android:layout_height="99dp"
         android:text="Stop Capture"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -54,6 +54,7 @@ public class takePhoto extends AppCompatActivity {
     TextView exposure_level;
     Integer total_sec;
     Integer int_in_sec;
+    Integer total_pics;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,8 +90,10 @@ public class takePhoto extends AppCompatActivity {
         total_sec = total_rec_sec+total_rec_min*60+total_rec_hrs*3600;
         //convert total interval time to sec
         int_in_sec = int_sec+int_min*60+int_hrs*3600;
+        total_pics = total_sec/int_in_sec;
         Log.d("total_sec_calculation", String.valueOf(total_sec));
         Log.d("interval in seconds", String.valueOf(int_in_sec));
+        Log.d("total # pics",String.valueOf(total_pics));
         setTitle(recording_name);
         bTakePicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
