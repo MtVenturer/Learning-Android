@@ -70,16 +70,27 @@ public class takePhoto extends AppCompatActivity {
 
         Intent intent = getIntent();
         String recording_name=intent.getStringExtra("recording_name");
-        Integer total_rec_hrs=Integer.parseInt(intent.getStringExtra("total_rec_hrs"));
-        Integer total_rec_min=Integer.parseInt(intent.getStringExtra("total_rec_min"));
-        Integer total_rec_sec=Integer.parseInt(intent.getStringExtra("total_rec_sec"));
-        Integer int_hrs=Integer.parseInt(intent.getStringExtra("int_hrs"));
-        Integer int_min=Integer.parseInt(intent.getStringExtra("int_min"));
-        Integer int_sec=Integer.parseInt(intent.getStringExtra("int_sec"));
+        Integer total_rec_hrs=intent.getIntExtra("total_rec_hrs",0); //try string to int conv
+
+        Integer total_rec_min=intent.getIntExtra("total_rec_min",0);
+        Log.d("recname",recording_name);
+        Log.d("total_rec_hrs", String.valueOf(total_rec_hrs));
+        Integer total_rec_sec=intent.getIntExtra("total_rec_sec",0);
+        Integer int_hrs=intent.getIntExtra("int_hrs",0);
+        Integer int_min=intent.getIntExtra("int_min",0);
+        Integer int_sec=intent.getIntExtra("int_sec",0);
+        Log.d("total_rec_min", String.valueOf(total_rec_hrs));
+        Log.d("total_rec_sec", String.valueOf(total_rec_hrs));
+        Log.d("int_hrs", String.valueOf(total_rec_hrs));
+        Log.d("int_min", String.valueOf(total_rec_hrs));
+        Log.d("total_rec_hrs", String.valueOf(total_rec_hrs));
+
         //convert total recording time to seconds
         total_sec = total_rec_sec+total_rec_min*60+total_rec_hrs*3600;
         //convert total interval time to sec
         int_in_sec = int_sec+int_min*60+int_hrs*3600;
+        Log.d("total_sec_calculation", String.valueOf(total_sec));
+        Log.d("interval in seconds", String.valueOf(int_in_sec));
         setTitle(recording_name);
         bTakePicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
