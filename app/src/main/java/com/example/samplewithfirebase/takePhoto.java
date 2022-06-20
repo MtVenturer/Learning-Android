@@ -55,11 +55,16 @@ public class takePhoto extends AppCompatActivity {
     Integer total_sec;
     Integer int_in_sec;
     Integer total_pics;
+    TextView timerText;
+    TextView captureCtr;
+    TextView uploadCtr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_photo);
-
+        timerText=findViewById(R.id.timerText);
+        captureCtr=findViewById(R.id.capture_ctr);
+        uploadCtr=findViewById(R.id.upload_ctr);
         viewFinder = findViewById(R.id.viewFinder);
         bTakePicture = findViewById(R.id.image_capture_button);
         //bRecord = findViewById(R.id.video_capture_button);
@@ -71,7 +76,7 @@ public class takePhoto extends AppCompatActivity {
 
         Intent intent = getIntent();
         String recording_name=intent.getStringExtra("recording_name");
-        Integer total_rec_hrs=intent.getIntExtra("total_rec_hrs",0); //try string to int conv
+        Integer total_rec_hrs=intent.getIntExtra("total_rec_hrs",0);
 
         Integer total_rec_min=intent.getIntExtra("total_rec_min",0);
         Log.d("recname",recording_name);
@@ -88,6 +93,9 @@ public class takePhoto extends AppCompatActivity {
 
         //convert total recording time to seconds
         total_sec = total_rec_sec+total_rec_min*60+total_rec_hrs*3600;
+        timerText.setText("Seconds Left:\n"+ String.valueOf(total_sec));
+        captureCtr.setText("Captured:\n");
+        uploadCtr.setText("Uploaded:\n");
         //convert total interval time to sec
         int_in_sec = int_sec+int_min*60+int_hrs*3600;
         total_pics = total_sec/int_in_sec;
@@ -156,6 +164,9 @@ public class takePhoto extends AppCompatActivity {
         Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageCapture);
         CameraControl cameraControl = camera.getCameraControl();
         CameraInfo cameraInfo = camera.getCameraInfo();
+        exposure_level.setText("Exp: "+cameraInfo.getExposureState().getExposureCompensationIndex());
+        zoom_level.setText("Zoom: "+cameraInfo.getZoomState().getValue().getLinearZoom());
+
         zoom_slider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

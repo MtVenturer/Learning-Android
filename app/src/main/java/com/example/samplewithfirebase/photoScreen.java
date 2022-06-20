@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class photoScreen extends AppCompatActivity {
     private static final String[] CAMERA_PERMISSION = new String[]{Manifest.permission.CAMERA};
@@ -27,11 +28,14 @@ public class photoScreen extends AppCompatActivity {
     EditText int_min_box;
     EditText int_sec_box;
     Button takePhoto;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //link components by id
         setContentView(R.layout.activity_photo_screen);
+
+
         recording_name_box=findViewById(R.id.recording_name);
         total_rec_hrs_box=findViewById(R.id.edit_recording_hr);
         total_rec_min_box=findViewById(R.id.edit_recording_mins);
@@ -49,9 +53,9 @@ public class photoScreen extends AppCompatActivity {
                 String total_rec_hrs=total_rec_hrs_box.getText().toString();
                 String total_rec_min=total_rec_min_box.getText().toString();
                 String total_rec_sec=total_rec_sec_box.getText().toString();
-                String int_hrs=total_rec_hrs_box.getText().toString();
-                String int_min=total_rec_hrs_box.getText().toString();
-                String int_sec=total_rec_hrs_box.getText().toString();
+                String int_hrs=int_hr_box.getText().toString();
+                String int_min=int_min_box.getText().toString();
+                String int_sec=int_sec_box.getText().toString();
 
                 Integer total_rec_hrs_num;
                 Integer total_rec_min_num;
@@ -111,11 +115,12 @@ public class photoScreen extends AppCompatActivity {
                     AlertDialog.Builder builder = new AlertDialog.Builder(photoScreen.this);
 
                     // 2. Chain together various setter methods to set the dialog characteristics
-                    builder.setMessage("error")
-                            .setTitle("invalid input");
+                    builder.setTitle("Invalid Input")
+                            .setMessage("Please enter non-zero times");
 
                     // 3. Get the <code><a href="/reference/android/app/AlertDialog.html">AlertDialog</a></code> from <code><a href="/reference/android/app/AlertDialog.Builder.html#create()">create()</a></code>
                     AlertDialog dialog = builder.create();
+                    dialog.show();
                 }else{
                     intent.putExtra("recording_name",recording_name);
                     Log.d("name",recording_name);
