@@ -83,7 +83,7 @@ public class photoScreen extends AppCompatActivity {
                 }else{
                     total_rec_sec_num=Integer.parseInt(total_rec_sec);
                 }
-                intent.putExtra("total_rec_sec",0);
+                intent.putExtra("total_rec_sec",total_rec_sec_num);
 
                 if (int_hrs.isEmpty()){
                     int_hrs_num=0;

@@ -27,6 +27,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -37,14 +38,17 @@ import android.widget.Toast;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 
 public class takePhoto extends AppCompatActivity {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     Button bTakePicture;
-    //Button bRecord;
+    Button bEnd;
     PreviewView viewFinder;
     private ImageCapture imageCapture;
     //private VideoCapture videoCapture;
@@ -58,6 +62,24 @@ public class takePhoto extends AppCompatActivity {
     TextView timerText;
     TextView captureCtr;
     TextView uploadCtr;
+    Integer captured=0;
+    Integer uploaded=0;
+    Boolean cameraRunning;
+    private Handler camHandler = new Handler();
+    private Runnable cameraRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if(captured<total_pics){
+                capturePhoto();
+                captured++;
+                camHandler.postDelayed(this,1000*int_in_sec);
+                timerText.setText("Seconds Left:\n"+ String.valueOf(total_sec));
+                captureCtr.setText("Captured:\n"+String.valueOf(captured)+"/"+total_pics);
+                uploadCtr.setText("Uploaded:\n"+String.valueOf(uploaded)+"/"+captured);
+            }
+
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +89,7 @@ public class takePhoto extends AppCompatActivity {
         uploadCtr=findViewById(R.id.upload_ctr);
         viewFinder = findViewById(R.id.viewFinder);
         bTakePicture = findViewById(R.id.image_capture_button);
+        bEnd=findViewById(R.id.end_capture_btn);
         //bRecord = findViewById(R.id.video_capture_button);
         //bRecord.setText("start recording"); // Set the initial text of the button
         zoom_slider= findViewById(R.id.zoom_slider);
@@ -93,20 +116,33 @@ public class takePhoto extends AppCompatActivity {
 
         //convert total recording time to seconds
         total_sec = total_rec_sec+total_rec_min*60+total_rec_hrs*3600;
-        timerText.setText("Seconds Left:\n"+ String.valueOf(total_sec));
-        captureCtr.setText("Captured:\n");
-        uploadCtr.setText("Uploaded:\n");
+
         //convert total interval time to sec
         int_in_sec = int_sec+int_min*60+int_hrs*3600;
         total_pics = total_sec/int_in_sec;
+        timerText.setText("Seconds Left:\n"+ String.valueOf(total_sec));
+        captureCtr.setText("Captured:\n"+String.valueOf(captured)+"/"+total_pics);
+        uploadCtr.setText("Uploaded:\n"+String.valueOf(uploaded)+"/"+captured);
         Log.d("total_sec_calculation", String.valueOf(total_sec));
         Log.d("interval in seconds", String.valueOf(int_in_sec));
         Log.d("total # pics",String.valueOf(total_pics));
         setTitle(recording_name);
+        bEnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                camHandler.removeCallbacks(cameraRunnable);
+            }
+        });
+
+
+
         bTakePicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
-                capturePhoto();
+
+
+                cameraRunnable.run();
+
             }
         });
 //        bRecord.setOnClickListener(new View.OnClickListener() {
