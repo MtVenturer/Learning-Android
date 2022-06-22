@@ -27,6 +27,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -58,6 +59,7 @@ public class takePhoto extends AppCompatActivity {
     TextView exposure_level;
     Integer total_sec;
     Integer int_in_sec;
+    Integer sec_left;
     Integer total_pics;
     TextView timerText;
     TextView captureCtr;
@@ -80,6 +82,7 @@ public class takePhoto extends AppCompatActivity {
 
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +122,7 @@ public class takePhoto extends AppCompatActivity {
 
         //convert total interval time to sec
         int_in_sec = int_sec+int_min*60+int_hrs*3600;
+        sec_left = total_sec;
         total_pics = total_sec/int_in_sec;
         timerText.setText("Seconds Left:\n"+ String.valueOf(total_sec));
         captureCtr.setText("Captured:\n"+String.valueOf(captured)+"/"+total_pics);
@@ -127,9 +131,28 @@ public class takePhoto extends AppCompatActivity {
         Log.d("interval in seconds", String.valueOf(int_in_sec));
         Log.d("total # pics",String.valueOf(total_pics));
         setTitle(recording_name);
+        CountDownTimer timer = new CountDownTimer(1000*sec_left, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                sec_left--;
+                timerText.setText("Seconds Left:\n"+ sec_left+"/"+String.valueOf(total_sec));
+                if((total_sec-sec_left)%int_in_sec==0){
+                    capturePhoto();
+                    captured++;
+                    captureCtr.setText("Captured:\n"+String.valueOf(captured)+"/"+total_pics);
+                    uploadCtr.setText("Uploaded:\n"+String.valueOf(uploaded)+"/"+captured);
+                };
+
+            }
+
+            public void onFinish() {
+                timerText.setText("Done!");
+            }
+        };
         bEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timer.cancel();
                 camHandler.removeCallbacks(cameraRunnable);
             }
         });
@@ -141,8 +164,8 @@ public class takePhoto extends AppCompatActivity {
                 // Code here executes on main thread after user presses button
 
 
-                cameraRunnable.run();
-
+               // cameraRunnable.run();
+                timer.start();
             }
         });
 //        bRecord.setOnClickListener(new View.OnClickListener() {
