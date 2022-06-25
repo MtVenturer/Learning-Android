@@ -2,6 +2,7 @@ package com.example.samplewithfirebase;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraControl;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,9 +24,14 @@ import androidx.lifecycle.LifecycleOwner;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.Image;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -37,10 +43,24 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageRegistrar;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
@@ -48,6 +68,8 @@ import java.util.concurrent.TimeUnit;
 
 public class takePhoto extends AppCompatActivity {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
+    FirebaseStorage storage;
+    StorageReference storageReference;
     Button bTakePicture;
     Button bEnd;
     PreviewView viewFinder;
@@ -66,27 +88,33 @@ public class takePhoto extends AppCompatActivity {
     TextView uploadCtr;
     Integer captured=0;
     Integer uploaded=0;
+    String recording_name;
     Boolean cameraRunning;
-    private Handler camHandler = new Handler();
-    private Runnable cameraRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if(captured<total_pics){
-                capturePhoto();
-                captured++;
-                camHandler.postDelayed(this,1000*int_in_sec);
-                timerText.setText("Seconds Left:\n"+ String.valueOf(total_sec));
-                captureCtr.setText("Captured:\n"+String.valueOf(captured)+"/"+total_pics);
-                uploadCtr.setText("Uploaded:\n"+String.valueOf(uploaded)+"/"+captured);
-            }
-
-        }
-    };
+//    private Handler camHandler = new Handler();
+//    private Runnable cameraRunnable = new Runnable() {
+//        @Override
+//        public void run() {
+//            if(captured<total_pics){
+//                capturePhoto();
+//                captured++;
+//                camHandler.postDelayed(this,1000*int_in_sec);
+//                timerText.setText("Seconds Left:\n"+ String.valueOf(total_sec));
+//                captureCtr.setText("Captured:\n"+String.valueOf(captured)+"/"+total_pics);
+//                uploadCtr.setText("Uploaded:\n"+String.valueOf(uploaded)+"/"+captured);
+//            }
+//
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_photo);
+        // get the Firebase storage reference
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+        //set ui elements
         timerText=findViewById(R.id.timerText);
         captureCtr=findViewById(R.id.capture_ctr);
         uploadCtr=findViewById(R.id.upload_ctr);
@@ -100,8 +128,9 @@ public class takePhoto extends AppCompatActivity {
         exposure_level=findViewById(R.id.exposure_level);
         exposure_slider=findViewById(R.id.exposure_slider);
 
+        //get data from previous activity photoScreen
         Intent intent = getIntent();
-        String recording_name=intent.getStringExtra("recording_name");
+        recording_name=intent.getStringExtra("recording_name");
         Integer total_rec_hrs=intent.getIntExtra("total_rec_hrs",0);
 
         Integer total_rec_min=intent.getIntExtra("total_rec_min",0);
@@ -149,16 +178,10 @@ public class takePhoto extends AppCompatActivity {
                 timerText.setText("Done!");
             }
         };
-        bEnd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                timer.cancel();
-                camHandler.removeCallbacks(cameraRunnable);
-            }
-        });
 
 
 
+        //start capture button
         bTakePicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
@@ -168,6 +191,17 @@ public class takePhoto extends AppCompatActivity {
                 timer.start();
             }
         });
+
+        //stop capture button
+        bEnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timer.cancel();
+//                camHandler.removeCallbacks(cameraRunnable);
+            }
+        });
+
+
 //        bRecord.setOnClickListener(new View.OnClickListener() {
 //            public void onClick(View v) {
 //                // Code here executes on main thread after user presses button
@@ -269,6 +303,90 @@ public class takePhoto extends AppCompatActivity {
         image.close();
     }
 
+    private void capturePhoto() {
+
+        StorageReference imgref = storageReference.child(recording_name).child(String.valueOf(captured));
+
+
+        long timestamp = System.currentTimeMillis();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, String.valueOf(uploadCtr));
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+
+
+        //OutputStream imgout = new ByteArrayOutputStream(1024);
+//        File imgfile = new File()
+
+        imageCapture.takePicture(
+                new ImageCapture.OutputFileOptions.Builder(
+                        getContentResolver(),
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        contentValues
+                ).build(),
+                getExecutor(),
+
+                new ImageCapture.OnImageSavedCallback() {
+                    @RequiresApi(api = Build.VERSION_CODES.R)
+                    @Override
+                    public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                        Toast.makeText(takePhoto.this, "Photo has been saved successfully.", Toast.LENGTH_SHORT).show();
+                        UploadTask uploadTask = imgref.putFile(outputFileResults.getSavedUri());
+                        ContentResolver deleteimg = getContentResolver();
+                        deleteimg.delete(outputFileResults.getSavedUri(), null);
+                        // Register observers to listen for when the download is done or if it fails
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                // ...
+                                File file = new File(outputFileResults.getSavedUri().getPath());
+                                file.delete();
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull ImageCaptureException exception) {
+                        Toast.makeText(takePhoto.this, "Error saving photo: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+
+
+//        ByteArrayOutputStream buffer = (ByteArrayOutputStream) imgout;
+//        byte[] bytes = buffer.toByteArray();
+//        InputStream imgstream = new ByteArrayInputStream(bytes);
+//        UploadTask uploadTask = imgref.putStream(imgstream);
+//        uploadTask.addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception exception) {
+//                // Handle unsuccessful uploads
+//            }
+//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+//                // ...
+//            }
+//        });
+
+
+    }
+
+
+
+}
+
+
+
 //    @SuppressLint("RestrictedApi")
 //    public void onClick(View view) {
 //        switch (view.getId()) {
@@ -335,34 +453,3 @@ public class takePhoto extends AppCompatActivity {
 //
 //        }
 //    }
-
-    private void capturePhoto() {
-        long timestamp = System.currentTimeMillis();
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, timestamp);
-        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
-
-
-        imageCapture.takePicture(
-                new ImageCapture.OutputFileOptions.Builder(
-                        getContentResolver(),
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        contentValues
-                ).build(),
-                getExecutor(),
-                new ImageCapture.OnImageSavedCallback() {
-                    @Override
-                    public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        Toast.makeText(takePhoto.this, "Photo has been saved successfully.", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onError(@NonNull ImageCaptureException exception) {
-                        Toast.makeText(takePhoto.this, "Error saving photo: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
-
-    }
-}
