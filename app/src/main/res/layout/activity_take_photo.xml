@@ -133,6 +133,7 @@
         android:layout_height="41dp"
         android:background="@color/white"
         android:textAlignment="center"
+        android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

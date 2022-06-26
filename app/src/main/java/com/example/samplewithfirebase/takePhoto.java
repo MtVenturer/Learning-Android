@@ -1,40 +1,28 @@
 package com.example.samplewithfirebase;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraControl;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraInfo;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.CameraX;
-import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
-import androidx.camera.core.VideoCapture;
 import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.LifecycleCameraController;
 import androidx.camera.view.PreviewView;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -47,31 +35,20 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageRegistrar;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
 
 
 public class takePhoto extends AppCompatActivity {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     FirebaseStorage storage;
     StorageReference storageReference;
-    Button bTakePicture;
-    Button bEnd;
+    Button bStart;
+    Button bStop;
     PreviewView viewFinder;
     private ImageCapture imageCapture;
     //private VideoCapture videoCapture;
@@ -119,8 +96,8 @@ public class takePhoto extends AppCompatActivity {
         captureCtr=findViewById(R.id.capture_ctr);
         uploadCtr=findViewById(R.id.upload_ctr);
         viewFinder = findViewById(R.id.viewFinder);
-        bTakePicture = findViewById(R.id.image_capture_button);
-        bEnd=findViewById(R.id.end_capture_btn);
+        bStart = findViewById(R.id.image_capture_button);
+        bStop =findViewById(R.id.end_capture_btn);
         //bRecord = findViewById(R.id.video_capture_button);
         //bRecord.setText("start recording"); // Set the initial text of the button
         zoom_slider= findViewById(R.id.zoom_slider);
@@ -175,6 +152,8 @@ public class takePhoto extends AppCompatActivity {
             }
 
             public void onFinish() {
+                bStop.setEnabled(false);
+                bStart.setEnabled(false);
                 timerText.setText("Done!");
             }
         };
@@ -182,22 +161,26 @@ public class takePhoto extends AppCompatActivity {
 
 
         //start capture button
-        bTakePicture.setOnClickListener(new View.OnClickListener() {
+        bStart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
 
 
                // cameraRunnable.run();
                 timer.start();
+                bStart.setEnabled(false);
+                bStop.setEnabled(true);
             }
         });
 
         //stop capture button
-        bEnd.setOnClickListener(new View.OnClickListener() {
+        bStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 timer.cancel();
 //                camHandler.removeCallbacks(cameraRunnable);
+                bStart.setEnabled(true);
+                bStop.setEnabled(false);
             }
         });
 
@@ -332,8 +315,7 @@ public class takePhoto extends AppCompatActivity {
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                         Toast.makeText(takePhoto.this, "Photo has been saved successfully.", Toast.LENGTH_SHORT).show();
                         UploadTask uploadTask = imgref.putFile(outputFileResults.getSavedUri());
-                        ContentResolver deleteimg = getContentResolver();
-                        deleteimg.delete(outputFileResults.getSavedUri(), null);
+
                         // Register observers to listen for when the download is done or if it fails
                         uploadTask.addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -345,8 +327,11 @@ public class takePhoto extends AppCompatActivity {
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                                 // ...
-                                File file = new File(outputFileResults.getSavedUri().getPath());
-                                file.delete();
+                                uploaded++;
+                                ContentResolver deleteimg = getContentResolver();
+                                deleteimg.delete(outputFileResults.getSavedUri(), null);
+                                uploadCtr.setText("Uploaded:\n"+String.valueOf(uploaded)+"/"+captured);
+
                             }
                         });
 
