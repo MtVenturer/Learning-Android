@@ -113,11 +113,11 @@
             app:layout_constraintTop_toTopOf="@+id/edit_recording_mins" />
 
         <TextView
-            android:id="@+id/interval_time_title"
+            android:id="@+id/time_interval_title"
             android:layout_width="211dp"
             android:layout_height="27dp"
             android:layout_marginStart="20dp"
-            android:text="Interval time"
+            android:text="Time Interval"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_recording_hr" />
@@ -133,7 +133,7 @@
             android:inputType="number"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/interval_time_title"
+            app:layout_constraintTop_toBottomOf="@+id/time_interval_title"
             app:layout_constraintVertical_bias="0.0" />
 
         <EditText
