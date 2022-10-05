@@ -8,24 +8,29 @@
 
     <Button
         android:id="@+id/start_test_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="172dp"
+        android:layout_width="0dp"
+        android:layout_height="240dp"
+        android:layout_marginTop="88dp"
         android:onClick="uploadScreen"
-        android:text="Capture Image"
+        android:text="Start Test"
+        android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/upload_image_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="98dp"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
         android:onClick="storeScreen"
-        android:text="Upload Image"
+        android:text="Upload Images"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/start_test_button" />
+        app:layout_constraintTop_toBottomOf="@+id/start_test_button"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

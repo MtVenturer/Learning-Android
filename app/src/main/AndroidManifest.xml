@@ -23,10 +23,10 @@
         <activity
             android:name=".takePhoto"
             android:exported="false"
-            android:parentActivityName=".photoScreen" />
+            android:parentActivityName=".recordConfig" />
         <activity android:name=".CameraActivity" />
         <activity
-            android:name=".photoScreen"
+            android:name=".recordConfig"
             android:exported="false"
             android:parentActivityName=".MainActivity" />
         <activity

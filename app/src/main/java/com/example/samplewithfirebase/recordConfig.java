@@ -2,7 +2,6 @@ package com.example.samplewithfirebase;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.ImageCapture;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -14,9 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-public class photoScreen extends AppCompatActivity {
+public class recordConfig extends AppCompatActivity {
     private static final String[] CAMERA_PERMISSION = new String[]{Manifest.permission.CAMERA};
     private static final int CAMERA_REQUEST_CODE = 10;
     //initialize all components
@@ -109,10 +107,22 @@ public class photoScreen extends AppCompatActivity {
                 Integer total_sec = total_rec_sec_num+total_rec_min_num*60+total_rec_hrs_num*3600;
                 //convert total interval time to sec
                 Integer int_in_sec = int_sec_num+int_min_num*60+int_hrs_num*3600;
-                //popup dialog if fields are invalid
+                //popup dialog if recording name is empty
+                if(recording_name.isEmpty()){
+                    // 1. Instantiate an <code><a href="/reference/android/app/AlertDialog.Builder.html">AlertDialog.Builder</a></code> with its constructor
+                    AlertDialog.Builder builder = new AlertDialog.Builder(recordConfig.this);
+
+                    // 2. Chain together various setter methods to set the dialog characteristics
+                    builder.setTitle("Invalid Input")
+                            .setMessage("Please enter a recording name");
+
+                    // 3. Get the <code><a href="/reference/android/app/AlertDialog.html">AlertDialog</a></code> from <code><a href="/reference/android/app/AlertDialog.Builder.html#create()">create()</a></code>
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
                 if(total_sec==0 || int_in_sec==0){
                     // 1. Instantiate an <code><a href="/reference/android/app/AlertDialog.Builder.html">AlertDialog.Builder</a></code> with its constructor
-                    AlertDialog.Builder builder = new AlertDialog.Builder(photoScreen.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(recordConfig.this);
 
                     // 2. Chain together various setter methods to set the dialog characteristics
                     builder.setTitle("Invalid Input")
